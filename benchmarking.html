@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Análisis de Competidores · Marketing Digital UdeA</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f0f4f8;
+  color: #1a1a2e;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+.container { max-width: 700px; margin: 0 auto; padding: 24px 16px 60px; }
+
+/* ── Header ── */
+.app-header {
+  background: linear-gradient(135deg, #5de2e7 0%, #3dccd1 100%);
+  color: #0d3b3e;
+  padding: 24px 24px 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 20px rgba(93,226,231,0.35);
+}
+.app-header h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 3px; }
+.app-header p  { font-size: 0.85rem; opacity: 0.75; }
+
+/* ── Progreso ── */
+.progress-wrap { margin-bottom: 22px; }
+.progress-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 7px; }
+.progress-step { font-size: 0.78rem; font-weight: 700; color: #1a9fa4; text-transform: uppercase; letter-spacing: .05em; }
+.progress-label { font-size: 0.78rem; color: #888; }
+.progress-bar-bg { background: #dde3ec; border-radius: 999px; height: 7px; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, #5de2e7, #3dccd1); border-radius: 999px; transition: width .4s ease; }
+
+/* ── Tarjeta blanca ── */
+.card { background: white; border-radius: 16px; padding: 22px; margin-bottom: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+
+/* ── Pantalla ── */
+.screen { display: none; animation: fadeIn .28s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── Pantalla 0: Setup ── */
+.welcome-icon { font-size: 2.4rem; margin-bottom: 10px; }
+.welcome-title { font-size: 1.2rem; font-weight: 700; color: #1a9fa4; margin-bottom: 5px; }
+.welcome-desc  { font-size: 0.9rem; color: #555; margin-bottom: 18px; }
+.instruc {
+  background: #f0fdfe;
+  border-left: 3px solid #5de2e7;
+  border-radius: 0 8px 8px 0;
+  padding: 11px 14px;
+  font-size: 0.84rem;
+  color: #444;
+  margin-bottom: 18px;
+  line-height: 1.6;
+}
+
+.section-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #888; margin-bottom: 10px; }
+
+.empresa-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; margin-bottom: 16px; }
+.form-group label { font-size: 0.79rem; font-weight: 600; color: #555; display: block; margin-bottom: 4px; }
+.form-group input {
+  border: 1.5px solid #dde3ec; border-radius: 10px; padding: 9px 12px;
+  font-size: 0.9rem; width: 100%; font-family: inherit; transition: border .2s;
+}
+.form-group input:focus { outline: none; border-color: #5de2e7; }
+.form-group input.mi-empresa { border-color: #5de2e7; background: #f0fdfe; }
+
+.comp-row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+.comp-row .comp-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: white; flex-shrink: 0;
+}
+.comp-row input { flex: 1; border: 1.5px solid #dde3ec; border-radius: 10px; padding: 9px 12px; font-size: 0.9rem; font-family: inherit; transition: border .2s; }
+.comp-row input:focus { outline: none; }
+.comp-row input:disabled { background: #f5f7fa; color: #aaa; }
+
+/* ── Encabezado dimensión ── */
+.dim-header {
+  border-radius: 14px;
+  padding: 16px 20px;
+  color: white;
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.dim-badge {
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; flex-shrink: 0;
+}
+.dim-header h2 { font-size: 1rem; font-weight: 700; }
+.dim-header p  { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+
+/* Colores por dimensión */
+.dim-1  { background: linear-gradient(135deg,#1565c0,#1e88e5); }
+.dim-2  { background: linear-gradient(135deg,#6a1b9a,#9c27b0); }
+.dim-3  { background: linear-gradient(135deg,#e65100,#fb8c00); }
+.dim-4  { background: linear-gradient(135deg,#b71c1c,#e53935); }
+.dim-5  { background: linear-gradient(135deg,#1b5e20,#388e3c); }
+.dim-6  { background: linear-gradient(135deg,#004d40,#00897b); }
+.dim-7  { background: linear-gradient(135deg,#880e4f,#e91e63); }
+.dim-8  { background: linear-gradient(135deg,#37474f,#607d8b); }
+
+/* ── Tarjeta de empresa para rating ── */
+.empresa-rating-card {
+  border: 1.5px solid #e8ecf2;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.empresa-rating-header {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex; align-items: center; gap: 8px;
+}
+.empresa-rating-header.mi { background: #f0fdfe; color: #0d6b70; border-bottom: 1px solid #c2f0f2; }
+.empresa-rating-header.comp { background: #f8f9fa; color: #333; border-bottom: 1px solid #e8ecf2; }
+.er-badge {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem; font-weight: 800; color: white; flex-shrink: 0;
+}
+
+.opciones-rating { padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.opcion-r {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 8px 11px; border-radius: 9px;
+  border: 1.5px solid #e8ecf2;
+  cursor: pointer; transition: all .16s;
+  font-size: 0.845rem; color: #333; background: white;
+}
+.opcion-r:hover { background: #fafbfc; border-color: #c5cfe0; }
+.opcion-r input[type="radio"] { display: none; }
+.score-indicator {
+  display: flex; gap: 3px; flex-shrink: 0; margin-top: 3px;
+}
+.score-indicator span {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #dde3ec;
+  display: inline-block;
+}
+.opcion-r.sel .score-indicator span.on { background: currentColor; }
+.opcion-r.sel { font-weight: 600; }
+
+/* ── Navegación ── */
+.nav-buttons { display: flex; gap: 10px; margin-top: 6px; }
+.btn-ant, .btn-sig {
+  flex: 1; padding: 13px; border-radius: 12px;
+  font-size: 0.93rem; font-weight: 700;
+  cursor: pointer; border: none; font-family: inherit; transition: all .18s;
+}
+.btn-ant { background: white; color: #1a9fa4; border: 2px solid #5de2e7; }
+.btn-ant:hover { background: #f0fdfe; }
+.btn-sig { background: linear-gradient(135deg,#5de2e7,#3dccd1); color: #0d3b3e; box-shadow: 0 3px 12px rgba(93,226,231,0.35); }
+.btn-sig:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(93,226,231,0.45); }
+
+.error-msg {
+  font-size: 0.82rem; color: #c62828; background: #fff5f5;
+  border: 1px solid #ffcdd2; border-radius: 8px; padding: 9px 13px;
+  margin-bottom: 10px; display: none;
+}
+
+/* ── Resultados ── */
+.res-header {
+  background: linear-gradient(135deg,#5de2e7,#3dccd1);
+  color: #0d3b3e; padding: 22px 24px; border-radius: 16px;
+  margin-bottom: 18px; text-align: center;
+  box-shadow: 0 4px 20px rgba(93,226,231,0.35);
+}
+.res-header h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 3px; }
+.res-header p  { font-size: 0.85rem; opacity: 0.75; }
+
+/* ── Tarjeta de empresa en resultados ── */
+.res-empresa-card {
+  background: white; border-radius: 16px; overflow: hidden;
+  margin-bottom: 14px; box-shadow: 0 2px 14px rgba(0,0,0,0.08);
+}
+.res-empresa-header {
+  padding: 14px 18px;
+  display: flex; align-items: center; justify-content: space-between;
+  color: white;
+}
+.res-empresa-nombre { font-size: 1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+.res-empresa-badge-wrap {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px;
+}
+.res-score-total { font-size: 1.4rem; font-weight: 800; line-height: 1; }
+.res-score-max   { font-size: 0.72rem; opacity: 0.78; }
+.res-empresa-body { padding: 14px 18px; }
+
+/* Barra por dimensión */
+.dim-bar-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 7px;
+}
+.dim-bar-label { font-size: 0.78rem; color: #555; width: 120px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dim-bar-track { flex: 1; background: #eef0f4; border-radius: 999px; height: 9px; overflow: hidden; }
+.dim-bar-fill   { height: 100%; border-radius: 999px; transition: width 1s ease; }
+.dim-bar-score  { font-size: 0.78rem; font-weight: 700; width: 16px; text-align: right; flex-shrink: 0; }
+
+.res-nivel-chip {
+  display: inline-block; margin-top: 10px; padding: 4px 12px;
+  border-radius: 999px; font-size: 0.75rem; font-weight: 700; color: white;
+}
+
+/* ── Sección brechas/ventajas ── */
+.insight-section { margin-top: 18px; }
+.insight-title {
+  font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .07em; color: #1a9fa4; margin-bottom: 10px;
+}
+.insight-card {
+  background: white; border-radius: 12px; padding: 14px 16px;
+  margin-bottom: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  font-size: 0.875rem; line-height: 1.6;
+  display: flex; gap: 10px; align-items: flex-start;
+}
+.insight-icon { font-size: 1.05rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Botones resultado ── */
+.btn-pdf, .btn-reiniciar {
+  display: block; width: 100%; padding: 13px; border-radius: 12px;
+  font-size: 0.93rem; font-weight: 700; cursor: pointer; border: none;
+  font-family: inherit; transition: all .18s; margin-bottom: 8px;
+}
+.btn-pdf { background: linear-gradient(135deg,#5de2e7,#3dccd1); color: #0d3b3e; box-shadow: 0 3px 12px rgba(93,226,231,0.3); }
+.btn-reiniciar { background: white; color: #1a9fa4; border: 2px solid #5de2e7; }
+.btn-reiniciar:hover { background: #f0fdfe; }
+
+@media (max-width: 480px) {
+  .empresa-grid { grid-template-columns: 1fr; }
+  .dim-bar-label { width: 90px; font-size: 0.72rem; }
+}
+@media print {
+  body { background: white; }
+  .btn-pdf, .btn-reiniciar, .progress-wrap { display: none; }
+  .container { padding: 0; max-width: 100%; }
+  .screen:not(#screen-result) { display: none !important; }
+  #screen-result { display: block !important; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="app-header">
+    <h1>Análisis de Competidores Digital</h1>
+    <p>Plan de Marketing Digital · Universidad de Antioquia 2026</p>
+  </div>
+
+  <div class="progress-wrap" id="progress-wrap">
+    <div class="progress-info">
+      <span class="progress-step" id="prog-step">Configuración</span>
+      <span class="progress-label" id="prog-label">Paso 1 de 10</span>
+    </div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+  </div>
+
+  <!-- Pantalla 0: Configuración -->
+  <div class="screen active" id="screen-0">
+    <div class="card">
+      <div class="welcome-icon">🔍</div>
+      <div class="welcome-title">Análisis de Competidores Digital</div>
+      <div class="welcome-desc">Evalúa la presencia digital de tu empresa frente a la competencia en 8 dimensiones clave.</div>
+      <div class="instruc">
+        Ingresa el nombre de tu empresa y entre 1 y 4 competidores directos. Luego evaluarás cada uno en las mismas 8 dimensiones usando una escala del 1 al 4.
+      </div>
+
+      <div class="section-label">Tu empresa</div>
+      <div class="empresa-grid" style="margin-bottom:18px">
+        <div class="form-group">
+          <label>Nombre de mi empresa</label>
+          <input type="text" id="nombre-mi" class="mi-empresa" placeholder="Ej: Panadería La Espiga">
+        </div>
+        <div class="form-group">
+          <label>Sector / Mercado</label>
+          <input type="text" id="nombre-sector" placeholder="Ej: Gastronomía">
+        </div>
+        <div class="form-group">
+          <label>Grupo / Estudiante</label>
+          <input type="text" id="nombre-grupo" placeholder="Ej: Grupo 3">
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="text" id="nombre-fecha" placeholder="Ej: 04/10/2026">
+        </div>
+      </div>
+
+      <div class="section-label">Competidores (mínimo 1, máximo 4)</div>
+      <div id="comp-rows">
+        <div class="comp-row">
+          <div class="comp-num" style="background:#e53935">1</div>
+          <input type="text" id="comp-1" placeholder="Nombre del competidor 1 (obligatorio)">
+        </div>
+        <div class="comp-row">
+          <div class="comp-num" style="background:#f4511e">2</div>
+          <input type="text" id="comp-2" placeholder="Competidor 2 (opcional)">
+        </div>
+        <div class="comp-row">
+          <div class="comp-num" style="background:#7b1fa2">3</div>
+          <input type="text" id="comp-3" placeholder="Competidor 3 (opcional)">
+        </div>
+        <div class="comp-row">
+          <div class="comp-num" style="background:#1565c0">4</div>
+          <input type="text" id="comp-4" placeholder="Competidor 4 (opcional)">
+        </div>
+      </div>
+    </div>
+    <p class="error-msg" id="err-0">Por favor ingresa el nombre de tu empresa y al menos un competidor.</p>
+    <div class="nav-buttons">
+      <button class="btn-sig" onclick="setupAvanzar()" style="flex:1">Comenzar análisis →</button>
+    </div>
+  </div>
+
+  <!-- Pantallas 1-8: dimensiones (generadas por JS) -->
+  <div class="screen" id="screen-1"></div>
+  <div class="screen" id="screen-2"></div>
+  <div class="screen" id="screen-3"></div>
+  <div class="screen" id="screen-4"></div>
+  <div class="screen" id="screen-5"></div>
+  <div class="screen" id="screen-6"></div>
+  <div class="screen" id="screen-7"></div>
+  <div class="screen" id="screen-8"></div>
+
+  <!-- Pantalla resultado -->
+  <div class="screen" id="screen-result"></div>
+
+</div>
+
+<script>
+// ── Dimensiones ───────────────────────────────────────────────────────────────
+const DIMS = [
+  {
+    id: 1, icono: "🌐", color: "dim-1",
+    nombre: "Sitio web y presencia digital básica",
+    guia: "Evalúa la calidad y actualización del sitio web de cada empresa.",
+    opciones: [
+      "No tiene sitio web, o está completamente abandonado",
+      "Tiene sitio web pero está desactualizado, lento o difícil de usar en celular",
+      "Sitio web funcional, actualizado y bien adaptado para celular",
+      "Sitio web profesional con funcionalidades avanzadas (tienda online, chat, reservas, etc.)"
+    ]
+  },
+  {
+    id: 2, icono: "📱", color: "dim-2",
+    nombre: "Actividad en redes sociales",
+    guia: "Observa con qué frecuencia publica y qué nivel de respuesta genera en su comunidad.",
+    opciones: [
+      "No tiene redes sociales activas o llevan más de 3 meses sin publicar",
+      "Publica de forma irregular, sin una línea visual ni mensaje definido",
+      "Publica regularmente con buen contenido visual e identidad reconocible",
+      "Publica constantemente, genera mucha interacción y tiene una comunidad activa y fiel"
+    ]
+  },
+  {
+    id: 3, icono: "🔎", color: "dim-3",
+    nombre: "Visibilidad en Google (sin pagar)",
+    guia: "Busca en Google los productos o servicios del sector y verifica quién aparece y en qué posición.",
+    opciones: [
+      "No aparece en ninguna búsqueda relevante del sector",
+      "Solo aparece si alguien busca exactamente el nombre de la empresa",
+      "Aparece en los resultados de Google para búsquedas generales del sector",
+      "Lidera los primeros resultados de Google en las palabras clave más importantes del sector"
+    ]
+  },
+  {
+    id: 4, icono: "📢", color: "dim-4",
+    nombre: "Publicidad digital (pauta pagada)",
+    guia: "Observa si la empresa aparece en anuncios de redes sociales, Google u otras plataformas.",
+    opciones: [
+      "No hace ningún tipo de publicidad digital visible",
+      "Hace publicidad digital de manera ocasional, sin estrategia clara ni continuidad",
+      "Tiene campañas activas y regulares en redes sociales o Google",
+      "Publicidad sofisticada: bien segmentada, variada en formatos y con retargeting visible"
+    ]
+  },
+  {
+    id: 5, icono: "⭐", color: "dim-5",
+    nombre: "Reputación y opiniones online",
+    guia: "Revisa reseñas en Google Maps, redes sociales y otras plataformas. Observa también cómo responden.",
+    opciones: [
+      "Sin reseñas, o con comentarios negativos acumulados sin responder",
+      "Pocas reseñas o calificación por debajo de 3.5 estrellas",
+      "Buenas reseñas (4 estrellas o más) que responde con regularidad",
+      "Excelente reputación (4.5+), muchas reseñas positivas y gestión activa de su imagen online"
+    ]
+  },
+  {
+    id: 6, icono: "💬", color: "dim-6",
+    nombre: "Atención al cliente digital",
+    guia: "Envía un mensaje por WhatsApp, Instagram o el formulario del sitio web y mide cómo responden.",
+    opciones: [
+      "No tiene canales digitales de atención, o simplemente no responde",
+      "Tiene canales (WhatsApp, DMs, etc.) pero la respuesta es lenta o inconsistente",
+      "Responde con rapidez y amabilidad a través de sus canales digitales",
+      "Atención rápida (menos de 1 hora), personalizada y disponible en múltiples canales"
+    ]
+  },
+  {
+    id: 7, icono: "✍️", color: "dim-7",
+    nombre: "Calidad del contenido propio",
+    guia: "Evalúa si el contenido que publica es original, útil para el cliente y diferente al de la competencia.",
+    opciones: [
+      "No produce contenido propio — solo comparte contenido de otros o de proveedores",
+      "Publica contenido básico, sin diferenciación ni valor real para el cliente",
+      "Produce contenido relevante y útil, con una identidad visual reconocible",
+      "Contenido de alto valor (tutoriales, casos de éxito, historias de marca) que genera conversación"
+    ]
+  },
+  {
+    id: 8, icono: "💡", color: "dim-8",
+    nombre: "Claridad de la propuesta de valor",
+    guia: "¿Queda claro en sus canales digitales qué vende y por qué comprarlo a ellos y no a otro?",
+    opciones: [
+      "No comunica claramente qué vende ni qué lo hace diferente",
+      "Comunica lo que vende, pero no hay diferenciación clara frente a la competencia",
+      "Tiene un mensaje diferenciador claro en sus principales canales digitales",
+      "Propuesta de valor muy clara, diferenciada y consistente en todos sus canales digitales"
+    ]
+  }
+];
+
+const COMP_COLORS = {
+  "mi": "#0d6b70",
+  "1": "#e53935",
+  "2": "#f4511e",
+  "3": "#7b1fa2",
+  "4": "#1565c0"
+};
+
+// Estado global
+let empresas = [];  // [{id, nombre, tipo}] tipo: "mi"|"1"|"2"|"3"|"4"
+let pantallaActual = "0";
+const TOTAL_PASOS = 10; // setup + 8 dims + result
+
+// ── Setup ────────────────────────────────────────────────────────────────────
+function setupAvanzar() {
+  const mi    = document.getElementById("nombre-mi").value.trim();
+  const comp1 = document.getElementById("comp-1").value.trim();
+  if (!mi || !comp1) {
+    document.getElementById("err-0").style.display = "block";
+    return;
+  }
+  document.getElementById("err-0").style.display = "none";
+
+  empresas = [{ id: "mi", nombre: mi, tipo: "mi" }];
+  ["1","2","3","4"].forEach(n => {
+    const v = document.getElementById(`comp-${n}`).value.trim();
+    if (v) empresas.push({ id: n, nombre: v, tipo: n });
+  });
+
+  renderDimensiones();
+  irA("1");
+}
+
+// ── Render dimensiones ────────────────────────────────────────────────────────
+function renderDimensiones() {
+  DIMS.forEach(dim => {
+    const screen = document.getElementById(`screen-${dim.id}`);
+    const anterior = dim.id === 1 ? "0" : String(dim.id - 1);
+    const siguiente = String(dim.id + 1);
+    const esUltima  = dim.id === 8;
+
+    screen.innerHTML = `
+      <div class="dim-header ${dim.color}">
+        <div class="dim-badge">${dim.icono}</div>
+        <div>
+          <h2>${dim.nombre}</h2>
+          <p>${dim.guia}</p>
+        </div>
+      </div>
+      ${empresas.map(e => renderEmpresaCard(e, dim)).join('')}
+      <p class="error-msg" id="err-${dim.id}">Califica todas las empresas antes de continuar.</p>
+      <div class="nav-buttons">
+        <button class="btn-ant" onclick="irA('${anterior}')">← Anterior</button>
+        <button class="btn-sig" onclick="dimAvanzar(${dim.id}, '${siguiente}', ${esUltima})">
+          ${esUltima ? 'Ver resultados →' : 'Siguiente →'}
+        </button>
+      </div>`;
+
+    // Eventos
+    empresas.forEach(e => {
+      dim.opciones.forEach((_, oi) => {
+        const radio = document.getElementById(`r-${dim.id}-${e.id}-${oi}`);
+        if (radio) radio.addEventListener("change", () => {
+          // Deselect all in group
+          document.querySelectorAll(`[data-grupo="g-${dim.id}-${e.id}"]`)
+            .forEach(l => l.classList.remove("sel"));
+          document.getElementById(`lbl-${dim.id}-${e.id}-${oi}`).classList.add("sel");
+        });
+      });
+    });
+  });
+}
+
+function renderEmpresaCard(empresa, dim) {
+  const esM  = empresa.tipo === "mi";
+  const col  = COMP_COLORS[empresa.tipo];
+  const tag  = esM ? "MI EMPRESA" : `COMPETIDOR ${empresa.tipo}`;
+
+  return `
+    <div class="empresa-rating-card">
+      <div class="empresa-rating-header ${esM ? 'mi' : 'comp'}">
+        <div class="er-badge" style="background:${col}">${empresa.tipo === "mi" ? "★" : empresa.tipo}</div>
+        <div>
+          <div style="font-size:0.68rem;opacity:0.7;text-transform:uppercase;letter-spacing:.06em">${tag}</div>
+          <div>${empresa.nombre}</div>
+        </div>
+      </div>
+      <div class="opciones-rating">
+        ${dim.opciones.map((opt, oi) => `
+          <label class="opcion-r" id="lbl-${dim.id}-${empresa.id}-${oi}"
+                 data-grupo="g-${dim.id}-${empresa.id}" style="color:${col}">
+            <input type="radio" id="r-${dim.id}-${empresa.id}-${oi}"
+                   name="g-${dim.id}-${empresa.id}" value="${oi+1}">
+            <div class="score-indicator">
+              ${[0,1,2,3].map(i => `<span class="${i<=oi ? 'on':''}" ></span>`).join('')}
+            </div>
+            <span>${opt}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+}
+
+// ── Navegación ────────────────────────────────────────────────────────────────
+function irA(key) {
+  document.getElementById(`screen-${pantallaActual}`).classList.remove("active");
+  pantallaActual = key;
+  document.getElementById(`screen-${key}`).classList.add("active");
+  actualizarProgreso(key);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function actualizarProgreso(key) {
+  const idx = key === "0" ? 0 : key === "result" ? 9 : parseInt(key);
+  const pct = Math.round((idx / (TOTAL_PASOS - 1)) * 100);
+  document.getElementById("prog-fill").style.width = pct + "%";
+  document.getElementById("prog-label").textContent = `Paso ${idx + 1} de ${TOTAL_PASOS}`;
+  if (key === "0") {
+    document.getElementById("prog-step").textContent = "Configuración";
+  } else if (key === "result") {
+    document.getElementById("prog-step").textContent = "Resultados";
+  } else {
+    const dim = DIMS.find(d => d.id === parseInt(key));
+    document.getElementById("prog-step").textContent = `Dimensión ${key}/8 — ${dim.nombre}`;
+  }
+}
+
+function dimAvanzar(dimId, siguiente, esUltima) {
+  const completo = empresas.every(e =>
+    document.querySelector(`input[name="g-${dimId}-${e.id}"]:checked`)
+  );
+  const errEl = document.getElementById(`err-${dimId}`);
+  if (!completo) {
+    errEl.style.display = "block";
+    return;
+  }
+  errEl.style.display = "none";
+  if (esUltima) {
+    construirResultados();
+    irA("result");
+  } else {
+    irA(siguiente);
+  }
+}
+
+// ── Resultados ────────────────────────────────────────────────────────────────
+function construirResultados() {
+  // Recolectar scores
+  const scores = {};
+  empresas.forEach(e => {
+    scores[e.id] = {};
+    DIMS.forEach(dim => {
+      const checked = document.querySelector(`input[name="g-${dim.id}-${e.id}"]:checked`);
+      scores[e.id][dim.id] = checked ? parseInt(checked.value) : 0;
+    });
+    scores[e.id].total = DIMS.reduce((s, dim) => s + scores[e.id][dim.id], 0);
+  });
+
+  const sector  = document.getElementById("nombre-sector").value || "—";
+  const grupo   = document.getElementById("nombre-grupo").value  || "—";
+  const fecha   = document.getElementById("nombre-fecha").value  || new Date().toLocaleDateString("es-CO");
+
+  const screen = document.getElementById("screen-result");
+  screen.innerHTML = `
+    <div class="res-header">
+      <h2>Análisis de Competidores Digital</h2>
+      <p>${sector} &nbsp;·&nbsp; ${grupo} &nbsp;·&nbsp; ${fecha}</p>
+    </div>
+    ${empresas.map(e => buildEmpresaCard(e, scores)).join('')}
+    ${buildInsights(scores)}
+    <button class="btn-pdf" onclick="window.print()">Guardar como PDF / Imprimir</button>
+    <button class="btn-reiniciar" onclick="reiniciar()">← Volver y editar</button>`;
+}
+
+function nivelEmpresa(total) {
+  if (total >= 27) return { label: "Líder digital",          color: "#1b5e20" };
+  if (total >= 20) return { label: "Competidor fuerte",      color: "#2e7d32" };
+  if (total >= 13) return { label: "Presencia básica",       color: "#f57f17" };
+  return                  { label: "Presencia muy débil",    color: "#c62828" };
+}
+
+function barColor(score) {
+  if (score === 4) return "#2e7d32";
+  if (score === 3) return "#66bb6a";
+  if (score === 2) return "#ffa726";
+  return "#ef5350";
+}
+
+function buildEmpresaCard(empresa, scores) {
+  const esM   = empresa.tipo === "mi";
+  const col   = COMP_COLORS[empresa.tipo];
+  const sc    = scores[empresa.id];
+  const total = sc.total;
+  const nivel = nivelEmpresa(total);
+  const pct   = Math.round((total / 32) * 100);
+
+  const bars = DIMS.map(dim => {
+    const s    = sc[dim.id];
+    const bpct = (s / 4) * 100;
+    return `
+      <div class="dim-bar-row">
+        <div class="dim-bar-label" title="${dim.nombre}">${dim.icono} ${dim.nombre.split(" ").slice(0,3).join(" ")}</div>
+        <div class="dim-bar-track">
+          <div class="dim-bar-fill" style="width:${bpct}%;background:${barColor(s)}"></div>
+        </div>
+        <div class="dim-bar-score" style="color:${barColor(s)}">${s}</div>
+      </div>`;
+  }).join('');
+
+  return `
+    <div class="res-empresa-card">
+      <div class="res-empresa-header" style="background:${col}">
+        <div class="res-empresa-nombre">
+          <div style="width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.2);
+               display:flex;align-items:center;justify-content:center;font-size:0.85rem;font-weight:800">
+            ${esM ? "★" : empresa.tipo}
+          </div>
+          <div>
+            <div style="font-size:0.68rem;opacity:0.78;text-transform:uppercase;letter-spacing:.06em">
+              ${esM ? "Mi empresa" : "Competidor " + empresa.tipo}
+            </div>
+            <div>${empresa.nombre}</div>
+          </div>
+        </div>
+        <div class="res-empresa-badge-wrap">
+          <div class="res-score-total">${total}</div>
+          <div class="res-score-max">de 32 pts</div>
+        </div>
+      </div>
+      <div class="res-empresa-body">
+        ${bars}
+        <span class="res-nivel-chip" style="background:${nivel.color}">${nivel.label}</span>
+      </div>
+    </div>`;
+}
+
+function buildInsights(scores) {
+  const miScore = scores["mi"];
+  const competitors = empresas.filter(e => e.tipo !== "mi");
+
+  const brechas   = [];
+  const ventajas  = [];
+
+  DIMS.forEach(dim => {
+    const miVal = miScore[dim.id];
+    const maxComp = Math.max(...competitors.map(e => scores[e.id][dim.id]));
+    const minComp = Math.min(...competitors.map(e => scores[e.id][dim.id]));
+
+    if (maxComp - miVal >= 2) {
+      const lider = competitors.find(e => scores[e.id][dim.id] === maxComp);
+      brechas.push(`<strong>${dim.icono} ${dim.nombre}:</strong> ${lider.nombre} tiene ventaja clara (${maxComp}/4 vs ${miVal}/4). Priorizar en el plan.`);
+    }
+    if (miVal - maxComp >= 2) {
+      ventajas.push(`<strong>${dim.icono} ${dim.nombre}:</strong> Ventaja competitiva real (${miVal}/4 vs máximo competidor ${maxComp}/4). Comunicarlo activamente.`);
+    }
+  });
+
+  // Ranking
+  const ranking = [...empresas].sort((a,b) => scores[b.id].total - scores[a.id].total);
+  const posicion = ranking.findIndex(e => e.id === "mi") + 1;
+  const miNombre = empresas.find(e => e.id === "mi").nombre;
+
+  let rankingTexto = "";
+  if (posicion === 1) {
+    rankingTexto = `<strong>${miNombre}</strong> lidera el análisis digital con ${scores["mi"].total}/32 puntos. El reto es mantener la ventaja.`;
+  } else {
+    const lider = ranking[0];
+    rankingTexto = `<strong>${miNombre}</strong> ocupa la posición ${posicion} de ${empresas.length}. ${lider.nombre} lidera con ${scores[lider.id].total}/32 pts. Brecha a cerrar: ${scores[lider.id].total - scores["mi"].total} puntos.`;
+  }
+
+  const brechasHtml = brechas.length > 0
+    ? brechas.map(b => `<div class="insight-card"><span class="insight-icon">⚠️</span><span>${b}</span></div>`).join('')
+    : `<div class="insight-card"><span class="insight-icon">✅</span><span>No se detectaron brechas críticas frente a la competencia.</span></div>`;
+
+  const ventajasHtml = ventajas.length > 0
+    ? ventajas.map(v => `<div class="insight-card"><span class="insight-icon">💪</span><span>${v}</span></div>`).join('')
+    : `<div class="insight-card"><span class="insight-icon">ℹ️</span><span>No se identificaron ventajas digitales significativas sobre la competencia. El plan debe enfocarse en alcanzar el nivel de los líderes.</span></div>`;
+
+  return `
+    <div class="insight-section">
+      <div class="insight-title">Posición competitiva</div>
+      <div class="insight-card"><span class="insight-icon">📊</span><span>${rankingTexto}</span></div>
+
+      <div class="insight-title" style="margin-top:14px">Brechas a cerrar (donde la competencia nos supera)</div>
+      ${brechasHtml}
+
+      <div class="insight-title" style="margin-top:14px">Ventajas competitivas (donde superamos a la competencia)</div>
+      ${ventajasHtml}
+    </div>`;
+}
+
+// ── Reiniciar ─────────────────────────────────────────────────────────────────
+function reiniciar() {
+  irA("0");
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+actualizarProgreso("0");
+</script>
+</body>
+</html>

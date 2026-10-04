@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico DOFA Digital · Marketing Digital UdeA</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f0f4f8;
+  color: #1a1a2e;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* ── Header ── */
+.app-header {
+  background: linear-gradient(135deg, #5de2e7 0%, #3dccd1 100%);
+  color: #0d3b3e;
+  padding: 24px 24px 20px;
+  border-radius: 16px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px rgba(93,226,231,0.35);
+}
+.app-header h1 { font-size: 1.35rem; font-weight: 700; margin-bottom: 3px; }
+.app-header p  { font-size: 0.85rem; opacity: 0.75; }
+
+/* ── Stepper ── */
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 24px;
+  padding: 0 4px;
+}
+.step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex: 1;
+}
+.step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: #dde3ec;
+  z-index: 0;
+  transition: background .3s;
+}
+.step-item.done:not(:last-child)::after { background: #5de2e7; }
+.step-dot {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: #dde3ec;
+  color: #888;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.78rem; font-weight: 700;
+  z-index: 1;
+  position: relative;
+  transition: all .3s;
+  border: 2px solid #dde3ec;
+}
+.step-item.active .step-dot {
+  background: #5de2e7;
+  border-color: #5de2e7;
+  color: #0d3b3e;
+  box-shadow: 0 0 0 4px rgba(93,226,231,0.25);
+}
+.step-item.done .step-dot {
+  background: #5de2e7;
+  border-color: #5de2e7;
+  color: #0d3b3e;
+}
+.step-label {
+  font-size: 0.65rem;
+  color: #888;
+  margin-top: 5px;
+  text-align: center;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.step-item.active .step-label { color: #1a9fa4; }
+.step-item.done  .step-label  { color: #1a9fa4; }
+
+/* ── Pantalla / sección ── */
+.screen { display: none; animation: fadeIn .3s ease; }
+.screen.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── Tarjeta blanca ── */
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+
+/* ── Pantalla 0: Identificación ── */
+.welcome-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.welcome-title { font-size: 1.25rem; font-weight: 700; color: #1a9fa4; margin-bottom: 6px; }
+.welcome-desc  { font-size: 0.92rem; color: #555; margin-bottom: 20px; }
+.instrucciones {
+  background: #f0f4f8;
+  border-left: 3px solid #5de2e7;
+  border-radius: 0 8px 8px 0;
+  padding: 12px 14px;
+  font-size: 0.85rem;
+  color: #444;
+  margin-bottom: 20px;
+}
+.instrucciones ul { padding-left: 16px; }
+.instrucciones li { margin-bottom: 3px; }
+
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-group label { font-size: 0.8rem; font-weight: 600; color: #555; display: block; margin-bottom: 5px; }
+.form-group input {
+  border: 1.5px solid #dde3ec;
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 0.9rem;
+  width: 100%;
+  transition: border .2s;
+  font-family: inherit;
+}
+.form-group input:focus { outline: none; border-color: #5de2e7; }
+
+/* ── Encabezado de sección de preguntas ── */
+.section-header-bar {
+  border-radius: 12px;
+  padding: 18px 20px;
+  color: white;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.section-badge {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem; font-weight: 800;
+  flex-shrink: 0;
+}
+.section-header-bar h2 { font-size: 1.05rem; font-weight: 700; }
+.section-header-bar p  { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+
+.bg-D { background: linear-gradient(135deg, #b71c1c, #e53935); }
+.bg-O { background: linear-gradient(135deg, #bf360c, #f4511e); }
+.bg-F { background: linear-gradient(135deg, #1b5e20, #2e7d32); }
+.bg-A { background: linear-gradient(135deg, #4a148c, #7b1fa2); }
+
+/* ── Pregunta individual ── */
+.question-block {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f4f8;
+}
+.question-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+
+.question-num {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.q-badge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 6px;
+  color: white;
+}
+.q-title {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  line-height: 1.4;
+  margin-bottom: 4px;
+}
+.q-enunciado {
+  font-size: 0.86rem;
+  color: #555;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.opciones { display: flex; flex-direction: column; gap: 7px; }
+.opcion {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 13px;
+  border-radius: 10px;
+  border: 1.5px solid #e8ecf2;
+  cursor: pointer;
+  transition: all .18s;
+  font-size: 0.875rem;
+  color: #333;
+  background: white;
+}
+.opcion:hover { border-color: #aab8cc; background: #f8fafd; }
+.opcion.selected { font-weight: 600; }
+.opcion input[type="radio"] { display: none; }
+.letra-badge {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; color: #666;
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all .18s;
+}
+.opcion.selected .letra-badge {
+  color: white;
+  border-color: transparent;
+}
+
+/* Colores por dimensión para opciones */
+.opcion.sel-D { border-color: #e53935; background: #fff5f5; }
+.opcion.sel-D .letra-badge { background: #e53935; }
+.opcion.sel-O { border-color: #f4511e; background: #fff8f5; }
+.opcion.sel-O .letra-badge { background: #f4511e; }
+.opcion.sel-F { border-color: #2e7d32; background: #f5fff5; }
+.opcion.sel-F .letra-badge { background: #2e7d32; }
+.opcion.sel-A { border-color: #7b1fa2; background: #fdf5ff; }
+.opcion.sel-A .letra-badge { background: #7b1fa2; }
+
+/* ── Navegación ── */
+.nav-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.btn-anterior, .btn-siguiente {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all .18s;
+  font-family: inherit;
+}
+.btn-anterior {
+  background: white;
+  color: #1a9fa4;
+  border: 2px solid #5de2e7;
+}
+.btn-anterior:hover { background: #f0fdfe; }
+.btn-siguiente {
+  background: linear-gradient(135deg, #5de2e7, #3dccd1);
+  color: #0d3b3e;
+  box-shadow: 0 3px 14px rgba(93,226,231,0.35);
+}
+.btn-siguiente:hover { transform: translateY(-1px); box-shadow: 0 5px 18px rgba(93,226,231,0.45); }
+.btn-siguiente:active { transform: translateY(0); }
+
+.error-msg {
+  font-size: 0.82rem;
+  color: #c62828;
+  background: #fff5f5;
+  border: 1px solid #ffcdd2;
+  border-radius: 8px;
+  padding: 10px 13px;
+  margin-bottom: 10px;
+  display: none;
+}
+
+/* ── Mini-progreso dentro de sección ── */
+.mini-progress {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 16px;
+}
+.mini-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #dde3ec;
+  transition: background .2s;
+}
+.mini-dot.done { background: currentColor; }
+
+/* ── RESULTADOS ── */
+.res-header {
+  background: linear-gradient(135deg, #5de2e7 0%, #3dccd1 100%);
+  color: #0d3b3e;
+  padding: 22px 24px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(93,226,231,0.35);
+}
+.res-header h2 { font-size: 1.3rem; font-weight: 800; margin-bottom: 4px; }
+.res-header p  { font-size: 0.85rem; opacity: 0.83; }
+
+/* ── Mapa de calor 2x2 ── */
+.heatmap-wrap {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.heatmap-title {
+  text-align: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #1a9fa4;
+  margin-bottom: 14px;
+}
+.heatmap-axis-wrap {
+  display: grid;
+  grid-template-columns: 28px 1fr 1fr;
+  grid-template-rows: 28px 1fr 1fr;
+  gap: 6px;
+}
+.axis-top-left { } /* vacío */
+.axis-col {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; color: #666;
+  text-transform: uppercase; letter-spacing: .05em;
+  text-align: center;
+}
+.axis-row {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem; font-weight: 700; color: #666;
+  text-transform: uppercase; letter-spacing: .05em;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+  text-align: center;
+}
+.heatmap-cell {
+  border-radius: 12px;
+  padding: 16px 14px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s;
+  min-height: 130px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.heatmap-cell:hover { transform: scale(1.02); }
+.hm-dim-name { font-size: 0.82rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; opacity: 0.9; }
+.hm-score { font-size: 2.2rem; font-weight: 800; line-height: 1; margin: 6px 0 2px; }
+.hm-max { font-size: 0.72rem; opacity: 0.75; }
+.hm-nivel {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.25);
+  display: inline-block;
+  margin-top: 6px;
+  align-self: flex-start;
+}
+.hm-bar-wrap {
+  background: rgba(255,255,255,0.2);
+  border-radius: 999px;
+  height: 5px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.hm-bar-fill {
+  height: 100%;
+  background: rgba(255,255,255,0.75);
+  border-radius: 999px;
+  transition: width 1.2s ease;
+}
+/* Intensidad de color por score — se aplica inline */
+
+/* ── Tarjetas de diagnóstico ── */
+.diag-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: #1a9fa4;
+  margin: 20px 0 10px;
+}
+.diag-card {
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+.diag-card-header {
+  padding: 13px 16px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.diag-card-header .dim-nombre { font-weight: 700; font-size: 0.93rem; }
+.diag-score-pill {
+  background: rgba(255,255,255,0.22);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+.diag-card-body { padding: 14px 16px; font-size: 0.875rem; color: #333; line-height: 1.65; }
+.nivel-chip {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+/* ── Prioridades ── */
+.prioridades-card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-top: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  border-left: 4px solid #5de2e7;
+}
+.prioridades-card h3 { font-size: 0.85rem; font-weight: 700; color: #1a9fa4; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+.prioridad-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 8px;
+  font-size: 0.875rem;
+}
+.prioridad-item:last-child { margin-bottom: 0; }
+.prio-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
+
+/* ── Botones de resultado ── */
+.btn-imprimir, .btn-reiniciar {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  font-family: inherit;
+  transition: all .18s;
+  margin-bottom: 8px;
+}
+.btn-imprimir {
+  background: linear-gradient(135deg, #5de2e7, #3dccd1);
+  color: #0d3b3e;
+  box-shadow: 0 3px 14px rgba(93,226,231,0.35);
+}
+.btn-reiniciar {
+  background: white;
+  color: #1a9fa4;
+  border: 2px solid #5de2e7;
+}
+.btn-reiniciar:hover { background: #f0f4f8; }
+
+@media (max-width: 480px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .step-label { display: none; }
+  .hm-score { font-size: 1.7rem; }
+}
+
+@media print {
+  body { background: white; }
+  .btn-imprimir, .btn-reiniciar { display: none; }
+  .container { padding: 0; max-width: 100%; }
+  #screen-0, #screen-D, #screen-O, #screen-F, #screen-A { display: none !important; }
+  #screen-result { display: block !important; }
+  .stepper { display: none; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="app-header">
+    <h1>Diagnóstico DOFA Digital</h1>
+    <p>Plan de Marketing Digital · Universidad de Antioquia 2026</p>
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" id="stepper">
+    <div class="step-item active" id="step-0">
+      <div class="step-dot">1</div>
+      <div class="step-label">Inicio</div>
+    </div>
+    <div class="step-item" id="step-D">
+      <div class="step-dot">2</div>
+      <div class="step-label">Debilidades</div>
+    </div>
+    <div class="step-item" id="step-O">
+      <div class="step-dot">3</div>
+      <div class="step-label">Oportunidades</div>
+    </div>
+    <div class="step-item" id="step-F">
+      <div class="step-dot">4</div>
+      <div class="step-label">Fortalezas</div>
+    </div>
+    <div class="step-item" id="step-A">
+      <div class="step-dot">5</div>
+      <div class="step-label">Amenazas</div>
+    </div>
+    <div class="step-item" id="step-result">
+      <div class="step-dot">6</div>
+      <div class="step-label">Resultado</div>
+    </div>
+  </div>
+
+  <!-- Pantalla 0: Bienvenida e identificación -->
+  <div class="screen active" id="screen-0">
+    <div class="card">
+      <div class="welcome-icon">📊</div>
+      <div class="welcome-title">Diagnóstico DOFA Digital</div>
+      <div class="welcome-desc">Identifica el estado digital de tu empresa para construir un plan de marketing sólido.</div>
+      <div class="instrucciones">
+        <ul>
+          <li>20 preguntas divididas en 4 secciones (5 por sección)</li>
+          <li>Selecciona la opción que mejor describe la situación actual de la empresa</li>
+          <li>Al final recibirás un diagnóstico visual con recomendaciones</li>
+        </ul>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Nombre / Grupo</label>
+          <input type="text" id="inp-grupo" placeholder="Ej: Grupo 3">
+        </div>
+        <div class="form-group">
+          <label>Empresa analizada</label>
+          <input type="text" id="inp-empresa" placeholder="Ej: Panadería La Espiga">
+        </div>
+        <div class="form-group">
+          <label>Sector</label>
+          <input type="text" id="inp-sector" placeholder="Ej: Gastronomía">
+        </div>
+        <div class="form-group">
+          <label>Fecha</label>
+          <input type="text" id="inp-fecha" placeholder="Ej: 04/10/2026">
+        </div>
+      </div>
+    </div>
+    <div class="nav-buttons">
+      <button class="btn-siguiente" onclick="irA('D')" style="flex:1">Comenzar →</button>
+    </div>
+  </div>
+
+  <!-- Pantallas de preguntas: D, O, F, A -->
+  <div class="screen" id="screen-D"></div>
+  <div class="screen" id="screen-O"></div>
+  <div class="screen" id="screen-F"></div>
+  <div class="screen" id="screen-A"></div>
+
+  <!-- Pantalla de resultados -->
+  <div class="screen" id="screen-result"></div>
+
+</div>
+
+<script>
+// ── Datos DOFA ────────────────────────────────────────────────────────────────
+const SECCIONES = [
+  {
+    key: "D",
+    nombre: "Debilidades",
+    subtitulo: "¿Qué necesita mejorar la empresa en lo digital?",
+    icono: "D",
+    bg: "bg-D",
+    anterior: "0",
+    siguiente: "O",
+    preguntas: [
+      {
+        codigo: "D1",
+        titulo: "Seguimiento de resultados digitales",
+        enunciado: "¿La empresa sabe cuántas personas visitan su sitio web, cuántas interactúan en redes sociales o cuántas consultas llegan por internet?",
+        opciones: [
+          "Sí, lleva un registro semanal y toma decisiones basadas en esos datos",
+          "Tiene las herramientas para medirlo, pero no las revisa con frecuencia",
+          "Solo revisa de vez en cuando cuántos seguidores o likes tiene",
+          "No mide nada — publica y espera que las cosas funcionen solas"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "D2",
+        titulo: "Frecuencia de publicación de contenido",
+        enunciado: "¿Con qué regularidad publica la empresa contenido en internet (redes sociales, blog, correos)?",
+        opciones: [
+          "Publica según un calendario planificado, de manera consistente",
+          "Publica varias veces por semana, aunque no siempre de forma organizada",
+          "Publica cuando hay tiempo o cuando recuerda hacerlo",
+          "Publica muy poco o de forma muy irregular"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "D3",
+        titulo: "Facilidad de uso del sitio web en celular",
+        enunciado: "Si un cliente entra al sitio web de la empresa desde su celular, ¿cómo es la experiencia?",
+        opciones: [
+          "Muy buena: carga rápido, se ve bien y es fácil de navegar en celular",
+          "Aceptable: funciona, pero la experiencia desde el celular puede mejorar",
+          "Deficiente: es lenta, difícil de usar o no está adaptada para celular",
+          "No aplica — la empresa no tiene sitio web"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "D4",
+        titulo: "Visibilidad en Google",
+        enunciado: "¿Aparece la empresa en los resultados de Google cuando alguien busca sus productos o servicios (sin pagar publicidad)?",
+        opciones: [
+          "Sí, aparece entre los primeros resultados para búsquedas de su sector",
+          "Aparece, pero en la segunda o tercera página de resultados",
+          "Solo aparece si alguien busca exactamente el nombre de la empresa",
+          "No aparece en ninguna búsqueda relevante del sector"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "D5",
+        titulo: "Responsable de lo digital en la empresa",
+        enunciado: "¿Quién se encarga del marketing digital en la empresa?",
+        opciones: [
+          "Un equipo o persona especializada, o una agencia contratada para eso",
+          "Una persona que maneja lo digital junto con otras responsabilidades",
+          "El dueño u otra persona sin formación específica en marketing digital",
+          "Nadie tiene esa responsabilidad claramente definida"
+        ], pts: [0,1,2,3]
+      }
+    ]
+  },
+  {
+    key: "O",
+    nombre: "Oportunidades",
+    subtitulo: "¿Qué puede aprovechar la empresa en el entorno digital?",
+    icono: "O",
+    bg: "bg-O",
+    anterior: "D",
+    siguiente: "F",
+    preguntas: [
+      {
+        codigo: "O1",
+        titulo: "Presencia digital de la competencia",
+        enunciado: "¿Qué tan bien posicionados están los competidores directos en internet?",
+        opciones: [
+          "Muy bien: tienen páginas web sólidas, redes activas y publicidad online constante",
+          "Regular: algunos lo hacen bien, pero hay brechas que se pueden aprovechar",
+          "Poco: la mayoría tienen presencia digital débil o descuidada",
+          "Casi nada: los competidores directos prácticamente no tienen presencia digital"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "O2",
+        titulo: "Tendencias digitales del sector",
+        enunciado: "¿Existen formas nuevas de hacer negocios en internet (como ventas online, videos, entregas a domicilio) que el sector aún no está aprovechando bien?",
+        opciones: [
+          "No, la empresa y su competencia ya están al día con las tendencias digitales",
+          "Hay algunas posibilidades que podrían explorarse",
+          "Hay varias tendencias claras que la mayoría del sector no ha adoptado aún",
+          "El sector es muy tradicional y hay una oportunidad enorme de ser el primero en digitalizarse"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "O3",
+        titulo: "Hábitos digitales del cliente",
+        enunciado: "¿El tipo de cliente al que le vende la empresa usa internet para buscar, comparar o comprar productos o servicios como los suyos?",
+        opciones: [
+          "Poco: sus clientes prefieren canales presenciales o tradicionales",
+          "Algo: se informan por internet pero prefieren comprar en persona",
+          "Bastante: consultan en internet y pueden comprar por cualquier canal",
+          "Totalmente: buscan, comparan y compran por internet"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "O4",
+        titulo: "Posibilidad de llegar a nuevos clientes por internet",
+        enunciado: "¿Podría la empresa llegar a clientes que hoy no puede alcanzar físicamente, si tuviera mejor presencia en internet?",
+        opciones: [
+          "No, sus canales actuales ya llegan a todos los clientes potenciales",
+          "Podría llegar a algunos clientes adicionales con esfuerzo moderado",
+          "Sí, hay grupos de clientes que claramente no está alcanzando hoy",
+          "Sí, podría abrir mercados completamente nuevos (otras ciudades, regiones o países)"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "O5",
+        titulo: "Plataformas o canales sin explorar",
+        enunciado: "¿Existen plataformas de venta, directorios o canales en internet (como Rappi, MercadoLibre, páginas de gremios, etc.) donde la empresa podría estar pero aún no está?",
+        opciones: [
+          "No, la empresa ya está en todas las plataformas relevantes para su sector",
+          "Hay algunas plataformas que podrían ser útiles pero no son urgentes",
+          "Hay plataformas importantes con mucho tráfico que la empresa no está usando",
+          "Existe un ecosistema digital activo en el sector del que la empresa no hace parte"
+        ], pts: [0,1,2,3]
+      }
+    ]
+  },
+  {
+    key: "F",
+    nombre: "Fortalezas",
+    subtitulo: "¿En qué está bien posicionada la empresa digitalmente?",
+    icono: "F",
+    bg: "bg-F",
+    anterior: "O",
+    siguiente: "A",
+    preguntas: [
+      {
+        codigo: "F1",
+        titulo: "Sitio web propio",
+        enunciado: "¿La empresa tiene un sitio web con su propio nombre de dominio, actualizado y fácil de usar?",
+        opciones: [
+          "Sí, con dominio propio, diseño profesional y contenido actualizado",
+          "Sí, pero está desactualizado o tiene problemas de navegación",
+          "Solo tiene perfiles en redes sociales, no tiene sitio web propio",
+          "No tiene ninguna presencia digital propia"
+        ], pts: [3,2,1,0]
+      },
+      {
+        codigo: "F2",
+        titulo: "Seguidores e interacción en redes sociales",
+        enunciado: "¿Las publicaciones de la empresa en redes sociales generan reacciones, comentarios o son compartidas por los usuarios de forma espontánea?",
+        opciones: [
+          "Sí, con frecuencia — la comunidad comenta, comparte y recomienda la marca",
+          "A veces — las publicaciones tienen interacción moderada",
+          "Poco — publica pero casi no genera reacciones",
+          "No tiene redes sociales activas"
+        ], pts: [3,2,1,0]
+      },
+      {
+        codigo: "F3",
+        titulo: "Opiniones y calificaciones en internet",
+        enunciado: "¿Cómo está valorada la empresa en plataformas como Google Maps, redes sociales o sitios de reseñas?",
+        opciones: [
+          "Muy bien: tiene muchas reseñas positivas y una calificación alta",
+          "Bien: tiene buenas valoraciones en general, con algún comentario negativo",
+          "Regular: pocas reseñas o comentarios mixtos",
+          "Mal o sin reseñas: no tiene valoraciones o tiene comentarios negativos sin responder"
+        ], pts: [3,2,1,0]
+      },
+      {
+        codigo: "F4",
+        titulo: "Lista de contactos de clientes",
+        enunciado: "¿La empresa tiene una lista organizada de correos electrónicos o teléfonos de clientes que pueda usar para enviarles información o promociones?",
+        opciones: [
+          "Sí, una base amplia, organizada y actualizada",
+          "Sí, pero es pequeña o no está bien organizada",
+          "Tiene algunos contactos pero en agendas del celular u hojas sueltas",
+          "No tiene ninguna lista de contactos de clientes"
+        ], pts: [3,2,1,0]
+      },
+      {
+        codigo: "F5",
+        titulo: "Contenido propio que diferencia a la empresa",
+        enunciado: "¿La empresa produce fotos, videos o artículos propios que la hagan reconocible y diferente de su competencia en internet?",
+        opciones: [
+          "Sí, tiene una imagen visual y un estilo de comunicación claro y consistente",
+          "Produce algo de contenido propio, pero sin una línea clara de marca",
+          "Reutiliza imágenes o contenido de proveedores o de internet",
+          "No produce contenido propio"
+        ], pts: [3,2,1,0]
+      }
+    ]
+  },
+  {
+    key: "A",
+    nombre: "Amenazas",
+    subtitulo: "¿Qué riesgos enfrenta la empresa en el entorno digital?",
+    icono: "A",
+    bg: "bg-A",
+    anterior: "F",
+    siguiente: "result",
+    preguntas: [
+      {
+        codigo: "A1",
+        titulo: "Dependencia de una sola plataforma",
+        enunciado: "¿La comunicación de la empresa con sus clientes depende principalmente de una sola plataforma (por ejemplo, solo WhatsApp o solo Instagram)?",
+        opciones: [
+          "No: tiene varios canales propios y no depende de uno solo",
+          "Algo: usa varios canales pero uno concentra la mayor parte del contacto",
+          "Sí: casi toda la comunicación con clientes pasa por una sola plataforma",
+          "Totalmente: si esa plataforma falla o cambia sus reglas, pierde el contacto con sus clientes"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "A2",
+        titulo: "Competidores más avanzados digitalmente",
+        enunciado: "¿Algún competidor directo tiene una ventaja digital tan grande que sea difícil alcanzarlo?",
+        opciones: [
+          "No, la empresa está al mismo nivel o por encima digitalmente",
+          "Hay competidores con mejor presencia, pero la diferencia es recuperable",
+          "Sí, hay competidores que llevan ventaja clara en internet",
+          "Un competidor domina el sector digitalmente y es muy difícil competirle"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "A3",
+        titulo: "Seguridad de las cuentas y la reputación online",
+        enunciado: "¿Ha tenido la empresa problemas como cuentas robadas, publicaciones falsas en su nombre o comentarios negativos que hayan afectado su imagen?",
+        opciones: [
+          "No, y además tiene medidas básicas de seguridad (contraseñas seguras, copias de respaldo)",
+          "No ha tenido problemas, pero tampoco tiene medidas de seguridad formales",
+          "Ha tenido algún incidente menor (cuenta hackeada o comentario viral negativo)",
+          "Ha tenido una crisis de reputación online o pérdida de cuentas importantes"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "A4",
+        titulo: "Impacto de los cambios en las plataformas",
+        enunciado: "Las plataformas como Instagram, Facebook o Google cambian con frecuencia las reglas de qué contenido muestran y a quién. ¿Qué tan vulnerable sería la empresa si eso cambia?",
+        opciones: [
+          "Poco: sus clientes llegan por varias vías, no depende de una sola plataforma",
+          "Algo: se vería afectada según la plataforma, pero tiene alternativas",
+          "Bastante: la mayoría de sus clientes digitales vienen de una sola plataforma",
+          "Mucho: un cambio en las reglas de una plataforma le cortaría casi todo el alcance"
+        ], pts: [0,1,2,3]
+      },
+      {
+        codigo: "A5",
+        titulo: "Comentarios negativos sin atender",
+        enunciado: "¿Existe el riesgo de que comentarios o reseñas negativas en internet afecten la percepción de la empresa sin que nadie los esté atendiendo?",
+        opciones: [
+          "No: siempre se responden los comentarios, buenos y malos, de forma oportuna",
+          "Poco: se intenta responder, aunque no hay un proceso formal para esto",
+          "Algo: hay reseñas negativas sin responder que pueden afectar la imagen",
+          "Sí: hay un historial de quejas o comentarios negativos acumulados sin gestionar"
+        ], pts: [0,1,2,3]
+      }
+    ]
+  }
+];
+
+const LETRAS = ["A","B","C","D"];
+const ORDEN  = ["D","O","F","A"];
+
+// ── Renderizar secciones ──────────────────────────────────────────────────────
+function renderSecciones() {
+  SECCIONES.forEach(sec => {
+    const screen = document.getElementById(`screen-${sec.key}`);
+    screen.innerHTML = `
+      <div class="section-header-bar ${sec.bg}">
+        <div class="section-badge">${sec.icono}</div>
+        <div>
+          <h2>${sec.nombre}</h2>
+          <p>${sec.subtitulo}</p>
+        </div>
+      </div>
+      <div class="mini-progress" id="mini-${sec.key}" style="color:${colorDim(sec.key)}">
+        ${[0,1,2,3,4].map(i => `<div class="mini-dot" id="mdot-${sec.key}-${i}"></div>`).join('')}
+      </div>
+      <div class="card" id="card-${sec.key}">
+        ${sec.preguntas.map((q, qi) => renderPregunta(q, qi, sec.key)).join('')}
+      </div>
+      <p class="error-msg" id="err-${sec.key}">Por favor responde todas las preguntas de esta sección antes de continuar.</p>
+      <div class="nav-buttons">
+        <button class="btn-anterior" onclick="irA('${sec.anterior}')">← Anterior</button>
+        <button class="btn-siguiente" onclick="avanzar('${sec.key}','${sec.siguiente}')">
+          ${sec.siguiente === 'result' ? 'Ver diagnóstico →' : 'Siguiente →'}
+        </button>
+      </div>`;
+
+    // Eventos de selección
+    sec.preguntas.forEach((q, qi) => {
+      q.opciones.forEach((_, oi) => {
+        const radio = document.getElementById(`radio-${q.codigo}-${oi}`);
+        if (radio) radio.addEventListener('change', () => {
+          // Deselect all in group
+          document.querySelectorAll(`[data-group="${q.codigo}"]`)
+            .forEach(l => l.classList.remove('selected', `sel-${sec.key}`));
+          // Select clicked
+          const lbl = document.getElementById(`lbl-${q.codigo}-${oi}`);
+          lbl.classList.add('selected', `sel-${sec.key}`);
+          actualizarMiniDots(sec.key);
+        });
+      });
+    });
+  });
+}
+
+function renderPregunta(q, qi, key) {
+  return `
+    <div class="question-block" id="qblock-${q.codigo}">
+      <div class="q-title">
+        <span class="q-badge" style="background:${colorDim(key)}">${q.codigo}</span>
+        ${q.titulo}
+      </div>
+      <div class="q-enunciado">${q.enunciado}</div>
+      <div class="opciones">
+        ${q.opciones.map((opt, oi) => `
+          <label class="opcion" id="lbl-${q.codigo}-${oi}" data-group="${q.codigo}">
+            <input type="radio" id="radio-${q.codigo}-${oi}" name="${q.codigo}" value="${q.pts[oi]}">
+            <span class="letra-badge">${LETRAS[oi]}</span>
+            <span>${opt}</span>
+          </label>`).join('')}
+      </div>
+    </div>`;
+}
+
+function colorDim(key) {
+  return { D:"#e53935", O:"#f4511e", F:"#2e7d32", A:"#7b1fa2" }[key];
+}
+
+function actualizarMiniDots(key) {
+  const sec = SECCIONES.find(s => s.key === key);
+  sec.preguntas.forEach((q, i) => {
+    const checked = document.querySelector(`input[name="${q.codigo}"]:checked`);
+    const dot = document.getElementById(`mdot-${key}-${i}`);
+    if (dot) dot.classList.toggle('done', !!checked);
+  });
+}
+
+// ── Navegación ────────────────────────────────────────────────────────────────
+let pantallaActual = "0";
+const ORDEN_PANTALLAS = ["0","D","O","F","A","result"];
+
+function irA(key) {
+  // Ocultar actual
+  const cur = document.getElementById(`screen-${pantallaActual}`);
+  if (cur) cur.classList.remove('active');
+
+  // Actualizar stepper
+  const idx = ORDEN_PANTALLAS.indexOf(pantallaActual);
+  const target = ORDEN_PANTALLAS.indexOf(key);
+
+  ORDEN_PANTALLAS.forEach((k, i) => {
+    const el = document.getElementById(`step-${k}`);
+    if (!el) return;
+    el.classList.remove('active','done');
+    if (i < target) el.classList.add('done');
+    else if (i === target) el.classList.add('active');
+  });
+
+  pantallaActual = key;
+  const next = document.getElementById(`screen-${key}`);
+  if (next) { next.classList.add('active'); }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function avanzar(key, siguiente) {
+  const sec = SECCIONES.find(s => s.key === key);
+  const completo = sec.preguntas.every(q => document.querySelector(`input[name="${q.codigo}"]:checked`));
+  const errEl = document.getElementById(`err-${key}`);
+
+  if (!completo) {
+    errEl.style.display = 'block';
+    // Scroll a la primera sin responder
+    const primeraVacia = sec.preguntas.find(q => !document.querySelector(`input[name="${q.codigo}"]:checked`));
+    if (primeraVacia) {
+      document.getElementById(`qblock-${primeraVacia.codigo}`).scrollIntoView({ behavior:'smooth', block:'center' });
+    }
+    return;
+  }
+  errEl.style.display = 'none';
+
+  if (siguiente === 'result') {
+    construirResultados();
+  }
+  irA(siguiente);
+}
+
+// ── Construir resultados ──────────────────────────────────────────────────────
+function construirResultados() {
+  const scores = {};
+  SECCIONES.forEach(sec => {
+    scores[sec.key] = 0;
+    sec.preguntas.forEach(q => {
+      const c = document.querySelector(`input[name="${q.codigo}"]:checked`);
+      if (c) scores[sec.key] += parseInt(c.value);
+    });
+  });
+
+  const grupo   = document.getElementById('inp-grupo').value   || 'Sin nombre';
+  const empresa = document.getElementById('inp-empresa').value || 'Sin empresa';
+  const sector  = document.getElementById('inp-sector').value  || '—';
+  const fecha   = document.getElementById('inp-fecha').value   || new Date().toLocaleDateString('es-CO');
+
+  const screen = document.getElementById('screen-result');
+  screen.innerHTML = `
+    <div class="res-header">
+      <h2>Diagnóstico DOFA Digital</h2>
+      <p>${empresa} &nbsp;·&nbsp; ${sector} &nbsp;·&nbsp; ${grupo} &nbsp;·&nbsp; ${fecha}</p>
+    </div>
+    ${buildHeatmap(scores)}
+    <p class="diag-section-title">Diagnóstico por dimensión</p>
+    ${buildDiagnosticos(scores)}
+    ${buildPrioridades(scores)}
+    <button class="btn-imprimir" onclick="window.print()">Guardar como PDF / Imprimir</button>
+    <button class="btn-reiniciar" onclick="reiniciar()">← Volver y editar</button>
+  `;
+}
+
+// ── Mapa de calor 2×2 ─────────────────────────────────────────────────────────
+function heatColor(key, score) {
+  const pct = score / 15;
+  const configs = {
+    F: { r:[232,27],  g:[245,94],  b:[232,32]  },  // blanco → verde
+    O: { r:[255,191], g:[235,74],  b:[210,14]  },  // blanco → naranja oscuro
+    D: { r:[255,183], g:[235,28],  b:[235,28]  },  // blanco → rojo
+    A: { r:[240,106], g:[220,0],   b:[240,172] },  // blanco → morado
+  };
+  const c = configs[key];
+  const r = Math.round(c.r[0] + (c.r[1] - c.r[0]) * pct);
+  const g = Math.round(c.g[0] + (c.g[1] - c.g[0]) * pct);
+  const b = Math.round(c.b[0] + (c.b[1] - c.b[0]) * pct);
+  return `rgb(${r},${g},${b})`;
+}
+
+function textColor(score) {
+  return score >= 8 ? 'white' : '#222';
+}
+
+function nivelLabel(key, score) {
+  if (key === 'F') {
+    if (score >= 11) return 'Fortaleza sólida';
+    if (score >= 6)  return 'Fortaleza moderada';
+    return 'Fortaleza débil';
+  }
+  if (key === 'O') {
+    if (score >= 11) return 'Oportunidad alta';
+    if (score >= 6)  return 'Oportunidad moderada';
+    return 'Oportunidad limitada';
+  }
+  if (key === 'D') {
+    if (score >= 11) return 'Debilidad crítica';
+    if (score >= 6)  return 'Debilidad moderada';
+    return 'Debilidad baja';
+  }
+  if (key === 'A') {
+    if (score >= 11) return 'Amenaza alta';
+    if (score >= 6)  return 'Amenaza moderada';
+    return 'Amenaza baja';
+  }
+}
+
+function buildHeatmap(scores) {
+  const cells = {
+    F: { pos:[1,1], nombre:'Fortalezas',     descripcion:'Activos digitales propios' },
+    O: { pos:[1,2], nombre:'Oportunidades',  descripcion:'Entorno digital favorable' },
+    D: { pos:[2,1], nombre:'Debilidades',    descripcion:'Brechas internas a cerrar' },
+    A: { pos:[2,2], nombre:'Amenazas',       descripcion:'Riesgos externos a vigilar' },
+  };
+
+  const buildCell = (key) => {
+    const s   = scores[key];
+    const pct = Math.round((s/15)*100);
+    const bg  = heatColor(key, s);
+    const tc  = textColor(s);
+    const niv = nivelLabel(key, s);
+    const c   = cells[key];
+    return `
+      <div class="heatmap-cell" style="background:${bg};color:${tc}">
+        <div>
+          <div class="hm-dim-name" style="opacity:.75;font-size:.7rem">${c.descripcion}</div>
+          <div style="font-size:1rem;font-weight:700;margin-top:4px">${c.nombre}</div>
+        </div>
+        <div>
+          <div class="hm-score">${s}</div>
+          <div class="hm-max">de 15 puntos</div>
+          <div class="hm-bar-wrap"><div class="hm-bar-fill" style="width:${pct}%"></div></div>
+          <div class="hm-nivel" style="background:rgba(0,0,0,0.15);color:${tc}">${niv}</div>
+        </div>
+      </div>`;
+  };
+
+  return `
+    <div class="heatmap-wrap">
+      <div class="heatmap-title">Mapa de Posición Digital</div>
+      <div class="heatmap-axis-wrap">
+        <div></div>
+        <div class="axis-col">Factores internos</div>
+        <div class="axis-col">Factores externos</div>
+        <div class="axis-row">Positivo</div>
+        ${buildCell('F')}
+        ${buildCell('O')}
+        <div class="axis-row">Riesgo</div>
+        ${buildCell('D')}
+        ${buildCell('A')}
+      </div>
+    </div>`;
+}
+
+// ── Diagnósticos ──────────────────────────────────────────────────────────────
+const DIAGNOSTICOS = {
+  F: [
+    { min:11, nivel:'Fortaleza sólida',   color:'#1b5e20',
+      texto:'La empresa tiene activos digitales reales que la diferencian. El plan puede apoyarse en estas fortalezas para amplificar resultados. Prioridad: seguir construyendo sobre lo que ya funciona.' },
+    { min:6,  nivel:'Fortaleza moderada', color:'#2e7d32',
+      texto:'Hay activos digitales utilizables, pero con brechas importantes. Consolide lo que ya funciona antes de expandirse a nuevos canales o formatos.' },
+    { min:0,  nivel:'Fortaleza débil',    color:'#66bb6a',
+      texto:'La empresa parte con pocos activos digitales. El plan debe construir primero los elementos básicos: sitio web, redes activas y lista de contactos propia.' },
+  ],
+  D: [
+    { min:11, nivel:'Debilidad crítica',   color:'#b71c1c',
+      texto:'Las brechas digitales son significativas y frenan cualquier estrategia. Prioridad inmediata: establecer métricas básicas, definir un responsable y crear un calendario de publicación.' },
+    { min:6,  nivel:'Debilidad moderada',  color:'#c62828',
+      texto:'Hay debilidades manejables. Ataca primero las de mayor impacto: medir resultados básicos y publicar con regularidad mínima antes de invertir en publicidad.' },
+    { min:0,  nivel:'Debilidad baja',      color:'#ef5350',
+      texto:'La empresa tiene pocas brechas digitales críticas. El foco puede estar en optimizar lo que ya existe más que en construir desde cero.' },
+  ],
+  O: [
+    { min:11, nivel:'Oportunidad alta',      color:'#bf360c',
+      texto:'El entorno es muy favorable: la competencia tiene presencia débil y los clientes ya usan internet. Actuar rápido para ocupar el espacio antes que los competidores se pongan al día.' },
+    { min:6,  nivel:'Oportunidad moderada',  color:'#d84315',
+      texto:'Hay oportunidades reales pero requieren análisis. Identificar los canales con mayor brecha competitiva y enfocar la estrategia inicial allí.' },
+    { min:0,  nivel:'Oportunidad limitada',  color:'#ff7043',
+      texto:'El entorno digital es competido o los clientes tienen baja adopción digital. El plan debe ser selectivo y diferenciador desde el principio.' },
+  ],
+  A: [
+    { min:11, nivel:'Amenaza alta',      color:'#4a148c',
+      texto:'La empresa enfrenta riesgos digitales importantes: dependencia excesiva de una plataforma, competidores fuertes o reputación sin gestionar. El plan debe incluir estrategias defensivas.' },
+    { min:6,  nivel:'Amenaza moderada',  color:'#6a1b9a',
+      texto:'Hay riesgos que deben monitorearse. Revisar la dependencia de plataformas y establecer un proceso básico para responder comentarios y proteger las cuentas.' },
+    { min:0,  nivel:'Amenaza baja',      color:'#9c27b0',
+      texto:'El entorno no representa riesgos críticos en este momento. Mantener vigilancia sobre los competidores y las reglas de las plataformas como parte del monitoreo regular.' },
+  ],
+};
+
+function buildDiagnosticos(scores) {
+  return ORDEN.map(key => {
+    const sec  = SECCIONES.find(s => s.key === key);
+    const s    = scores[key];
+    const diag = DIAGNOSTICOS[key].find(d => s >= d.min);
+    return `
+      <div class="diag-card">
+        <div class="diag-card-header" style="background:${diag.color}">
+          <span class="dim-nombre">${sec.nombre}</span>
+          <span class="diag-score-pill">${s}/15 pts</span>
+        </div>
+        <div class="diag-card-body">
+          <span class="nivel-chip" style="background:${diag.color}">${diag.nivel}</span>
+          <p>${diag.texto}</p>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+// ── Prioridades ───────────────────────────────────────────────────────────────
+function buildPrioridades(scores) {
+  // Mayor fortaleza
+  const mayorF = scores.F >= 10 ? `Aprovechar las fortalezas (${scores.F}/15 pts) como base del plan — son un activo real para diferenciarse.` : null;
+  // Debilidad más urgente
+  const urgD = scores.D >= 9 ? `Atender las debilidades (${scores.D}/15 pts) antes de invertir en publicidad paga — una base digital débil hace ineficiente cualquier inversión.` : null;
+  // Oportunidad
+  const oprO = scores.O >= 9 ? `Aprovechar las oportunidades del entorno (${scores.O}/15 pts) con rapidez — la ventana competitiva puede cerrarse.` : null;
+  // Amenaza
+  const urgA = scores.A >= 9 ? `Gestionar las amenazas (${scores.A}/15 pts): diversificar canales y establecer protocolos de seguridad y reputación.` : null;
+
+  const items = [mayorF, urgD, oprO, urgA].filter(Boolean);
+  if (items.length === 0) {
+    items.push('La empresa presenta un perfil digital equilibrado. El plan puede avanzar en todas las dimensiones de forma progresiva.');
+  }
+
+  return `
+    <div class="prioridades-card">
+      <h3>Recomendaciones prioritarias</h3>
+      ${items.map(txt => `
+        <div class="prioridad-item">
+          <span class="prio-icon">→</span>
+          <span>${txt}</span>
+        </div>`).join('')}
+    </div>`;
+}
+
+// ── Reiniciar ─────────────────────────────────────────────────────────────────
+function reiniciar() {
+  irA('0');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+renderSecciones();
+</script>
+</body>
+</html>
